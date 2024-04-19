@@ -85,7 +85,7 @@
   //const newUser = object.assign({}, user); -> {}빈 객체는 초기값임, 두번째 매개변수로 들어온 객체들이 초기값에 병합됨으로 복제되는것
   // {} + {name:'Mike', age: 30,}
 
-  const newUser = Object.assignA({}, user);
+  const newUser = Object.assign({}, user);
   newUser.name = 'Tom';
   console.log(user.name); //'Mike'
   //newUser != user (같은 객체가 아님)
