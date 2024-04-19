@@ -154,11 +154,6 @@
   //   gender : 'male',
   // }
 ```
-*** *** 
-```javascript
-
-```
-
 ### Computed  property
 ```javascript
   //계산된 프로퍼티 Computed property
@@ -193,8 +188,37 @@
   //console.log(obj) // {이름: 33}
 ```
 
+*** ***
+## 심볼 Symbol
+- 유일한 식별자
+```javascript
+  const obj = {
+    1: '1입니다',
+    flase: '거짓'
+  }
+  object.keys(obj); //["1", "false"]
 
+  //접근시
+  obj['1'] //"1 입니다."
+  obj['false'] //"거짓"
+``` 
+```javascript
+  const a = Symbol(); //new를 붙이지 않음!
 
+  const id = Symbol('id');
+  const user = {
+    name : 'Mike',
+    age : 30,
+    [id] : 'myid'
+  }
+  user {name: "Mike", age": 30, Symbol(id): "myid"}
+  user[id] //"myid"
+  //Object.에 id값 출력안됨
+  object.keys(user); //["name", "age"]
+  object.values(user); // ["Mike", 30]
+  Object.entries(user); //[Array(2),Array(2)]
+  for(let a in user){}
+``` 
 
 
 
