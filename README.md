@@ -71,7 +71,7 @@
 - Object.entries()
 - Object.formEntries()
 
-####***Object.assign(): 객체복제*** 
+***Object.assign(): 객체복제*** 
 ```javascript
   const user = {
     name: 'Mike',
@@ -104,17 +104,74 @@
   const info2 = {gender: 'male',}
   Object.assign(user, info1, info2)
 ```
-####***Object.keys(): 키 배열 반환*** 
+***Object.keys(): 키 배열 반환*** 
+```javascript
+  const user =  {
+    name : 'Mike',
+    age : 30,
+    gender : 'male'
+  }
+  //user(객체)를 Object.keys(인수)로 전달함
+  const result = Object.keys(user);
+  console.log(result) //키들이 배열로 반환됨 ["name", "age", "gender"]
+```
+***Object.values(): 값 배열 반환*** 
+```javascript
+  const user =  {
+    name : 'Mike',
+    age : 30,
+    gender : 'male'
+  }
+  const result = Object.values(user);
+  console.log(result)//value들이 배열로 반환됨 ["Mike", "30", "male"]
+```
+***Object.entries(): 키/값 배열 반환*** 
+```javascript
+  const user =  {
+    name : 'Mike',
+    age : 30,
+    gender : 'male'
+  }
+  Object.entries(user); //key와value들이 쌍이로 묶어 배열로 반환됨
+  // [
+  //  ["name","Mike"], //0
+  //  ["age",30], //1
+  //  ["gender","male"] //2
+  // ]
+```
+***Object.fromEntries(): 키/값 배열을 객체로*** 
+```javascript
+  const arr = 
+  [
+    ["name","Mike"],
+    ["age",30],
+    ["gender","male"]
+  ];
+  Object.fromEntries(arrr);
+  // {
+  //   name : 'Mike',
+  //   age : 30,
+  //   gender : 'male',
+  // }
+```
+*** *** 
+```javascript
+
+```
 
 ### Computed  property
 ```javascript
   //계산된 프로퍼티 Computed property
+  let n = "name"
   let a = 'age';
   const user = {
-    name : 'Mike',
-    [a] : 30 //age : 30
+    [n] : "Mike", //name : "Mike"
+    [a] : 30, //age : 30
+    [1 + 4] : 5,
     //변수 a에 할당된 값이 들어간다
   }
+  console.log(user);
+  //{5: 5, name: "Mike", age: 30}
 ```
 ```javascript
   //식 자체를 넣는것도 가능
@@ -122,8 +179,18 @@
     [1 + 4] : 5,
     ["안녕"+"하세요"] : "Hello"
   }
-
   user {5: 5, 안녕하세요 : "Hello"}
+```
+```javascript
+  function makeObj(key, val) {
+    return{
+      [key] : val
+    }
+  }
+  const obj = makeObj('나이', 33);
+  console.log(obj) // {나이: 33}
+  //const obj = makeObj('이름', 33);
+  //console.log(obj) // {이름: 33}
 ```
 
 
