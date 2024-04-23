@@ -190,35 +190,118 @@
 
 *** ***
 ## 심볼 Symbol
-- 유일한 식별자
+### 1. 객체 property key는 문자형으로 가능
+- 유일한 식별자, 유일성이 보장된다
+- Symbol : 이름이 같더라도 다른존재임
 ```javascript
-  const obj = {
-    1: '1입니다',
-    flase: '거짓'
-  }
-  object.keys(obj); //["1", "false"]
-
-  //접근시
-  obj['1'] //"1 입니다."
-  obj['false'] //"거짓"
-``` 
+      const obj = {
+        1: '1입니다',
+        flase: '거짓'
+      }
+      object.keys(obj); //["1", "false"] 문자형으로 반환
+    
+      //접근시 문자1이나 문자false로 접근 가능
+      obj['1'] //"1 입니다."
+      obj['false'] //"거짓"
+  // 
+```
+### 2. 하나더 가능 한게 바로 symbol형
+Symbol은 유일한 식별자를 만들때 사용
 ```javascript
-  const a = Symbol(); //new를 붙이지 않음!
+      const a = Symbol(); //new를 붙이지 않음!
+      const b = Symbol();
+      console.log(a) //Symbol();
+      console.log(b) //Symbol();
 
-  const id = Symbol('id');
-  const user = {
-    name : 'Mike',
-    age : 30,
-    [id] : 'myid'
-  }
-  user {name: "Mike", age": 30, Symbol(id): "myid"}
-  user[id] //"myid"
-  //Object.에 id값 출력안됨
-  object.keys(user); //["name", "age"]
-  object.values(user); // ["Mike", 30]
-  Object.entries(user); //[Array(2),Array(2)]
-  for(let a in user){}
-``` 
+      a == b; //false
+      a === b; //false
+
+      //Symbol : 유일성 보장, 설명 붙일 수 있음
+      const id = Symbol('id');
+```
+```javascript
+      //심볼을 객체의 key로 사용 예시 (computed property :key)
+      const id = Symbol('id');
+      const user = {
+        name : 'Mike',
+        age : 30,
+        [id] : 'myid'
+      }
+      console.log(user); //{name: "Mike", age": 30, Symbol(id): "myid"}
+      console.log(user[id]); //"myid"
+      user[id] //"myid"
+
+      //Object Method ,for in은 key가 symbol 형인 property는 건너뜀
+      object.keys(user); //["name", "age"]
+      object.values(user); // ["Mike", 30]
+      Object.entries(user); //[Array(2),Array(2)]
+      for(let a in user){}
+
+      //원본 데이터는 Object Method ,for in으로순회하면서 사용하고 있을 수 있기 때문에(내가 추가한 프로퍼티가 어디서 나올지 예측할 수 없음)
+      //그러므로 원본은 건드리지 않고 속성을 추가할 수 있다
+      const user = {
+        name : 'Mike',
+        age : '30'
+      }
+      const id = Symbol('id');
+      user[id] = 'myid';
+```
+## Symbol.for() : 전역 심볼
+- 하나의 심볼만 보장받을 수 있음
+- 없으면 만들고, 있으면 가져오기 때문
+- Symbol 함수는 매번 다른 Symbol 값을 생성하지만,
+- Symbol.for 메소드는 하나를 생성한 뒤 키를 통해 같은 Symbol을 공유
+```javascript
+      const id1 = Symbol.for('id');
+      const id2 = Symbol.for('id');
+
+      id1 === id1; // true
+
+      //생성한 이름(Symbol.for('id') -> 'id')을 알고 싶다면 Symbol.keyFor를 사용해 변수를 넣어주면 됨
+      Symbol.keyFor(id1) // "id"
+
+      //!!! 전역심볼이 아닌 Symbol()은 keyFor사용불가, description사용 !!!
+      const id = Symbol('id 입니다.');
+      id.description; // "id 입니다."
+```
+숨겨진 Symbol key 보는법
+```javascript
+      const id = Symbol('id');
+      const user =  {
+        name : 'Mike',
+        age : 30,
+        [id] : 'myid'
+      }
+      Object.getOwnPropertySymbols(user); // Symbol(id) 심볼만 보여줌
+      Reflect.ownKeys(user); //["name", "age", "Symbol(id)"]심볼 포함한 모든키를 보여줌
+```
+실전 예시
+```javascript
+      //다른 개발자가 만들어 놓은 객체
+      const user = {
+        name : "Mike",
+        age : 30
+      }
+
+      //내가 작업
+      //user.showName = function() {};
+      // -> 결과 : His showName is function(){}.
+      const showName = Symbol("show name");
+      user[showName] = function() {
+        console.log(this.name);
+      }
+      user[showName]();
+      //Mike
+
+      //사용자가 접속하면 보이는 메세지
+      for(let key in user){
+        console.log(`His ${key} is ${user[key]}.`);
+      }
+      //His name is Mike.
+      //His age is 30.
+```
+
+
 
 
 
