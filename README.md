@@ -63,8 +63,8 @@
   item3.showPrice(); //가격은 9000원 입니다.
 ```
 
-## 객체 Object - Methiods & Computed  property
-### Methids
+## 객체 Object - Methods & Computed  property
+### Methods
 - Object.assign()
 - Object.keys()
 - Object.values()
