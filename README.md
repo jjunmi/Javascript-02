@@ -554,7 +554,7 @@ Number()와 다른점은 문자가 혼용 되어 있어도 동작함
             list[i].slice(4)
           );
       }
-      console.log(newList)l //["목차1","목차2","목차3","목차4"]
+      console.log(newList); //["목차1","목차2","목차3","목차4"]
 ```
 ```javascript
       //금칙어 : 콜라
@@ -887,3 +887,500 @@ map()이나 filter()대신에 reduce()를 써서 반환 예시
       console.log(result);
       //["Tom", "Sue"]
 ``` 
+## 구조분해 할당 : Destructuring assignment
+- 구조 분해 할당 구문은 배열이나 객체의 속성을 분해해서 그 값을 변수에 담을 수 있게 하는 표현식
+### 배열 Array
+```javascript
+    let [x, y] = [1, 2];
+
+    console.log(x); //1
+    console.log(y); //2
+```
+```javascript
+    let users = ['Mike', 'Tom', 'Jane'];
+
+    let [user1, user2, user3] = users;
+    //let user1 = users[0];
+    //let user2 = users[1];
+    //let user3 = users[2];
+
+    console.log(user1); //'Mike'
+    console.log(user2); //'Tom'
+    console.log(user3); //'Jane'
+```
+```javascript
+    //arr.split()이용
+    //str.split('-'); -> ["Mike", "Tom", "Jane"];
+    let str = "Mike-Tom-Jane";
+    let [user1, user2, user3] = str.split('-');
+    console.log(user1); //'Mike'
+    console.log(user2); //'Tom'
+    console.log(user3); //'Jane'
+```
+```javascript
+    //해당하는 값이 없으면 undefined
+    let [a, b, c] = [1, 2]; //c undefined
+    //기본값을 주면 에러방지 가능
+    let [a=3, b=4, c=5] = [1, 2];
+    console.log(a); //1
+    console.log(b); //2
+    console.log(c); //5 기본값 적용됨
+```
+```javascript
+    //공백과 쉼표를 이용해 필요하지 않은 배열요소 무시가능
+    let [user1, ,user2] = ["Mike", "Tom", "Jane", "Tony"];
+    console.log(user1); //'Mike'
+    console.log(user2); //'Jane'
+```
+배열 구조 분해 : 바꿔치기
+```javascript
+    //a b 값 서로 교환하려면
+    let a = 1;
+    let b = 2;
+
+    let c = a; //c에 a값을 저장해둠 : 임시 변수 생성
+    a = b;
+    b = c;
+
+  //구조분해로 구현
+  let a = 1;
+  let b = 2;
+  [a, b] = [b, a]
+```
+### 객체 Object
+```javascript
+      let user = {name: 'Mike', age: 30}
+      let {name, age} user;
+      //let name = user.name;
+      //let age = user.age;
+      //let {age, name} user; 순서를 바꿔도 동일하게 동작
+  
+      console.log(name); //'Mike'
+      console.log(age); // 30
+```
+```javascript
+      //변수 이름 변경가능
+      let user = {name: 'Mike', age: 30}
+      let {name: userName, age: userAge} = user;
+
+      console.log(userName); //'Mike'
+      console.log(userAge); // 30
+```
+```javascript
+      //변수 이름 변경가능
+      let user = {name: 'Mike', age: 30}
+      let {name, age, gender} = user; //gender undefined
+
+      let {name, age, gender = 'male'} = user;
+      console.log(name); //'Mike'
+      console.log(age); // 30
+      console.log(gender); // 'male'
+
+      //객체에 값이 있으면 기본값 무시
+      let user = {name: 'Jane', age: 18, gender: 'female'}
+      let {name, age, gender} = user; //gender undefined
+
+      let {name, age, gender = 'male'} = user;
+      console.log(name); //'Jane'
+      console.log(age); // 18
+      console.log(gender); // 'female'
+```
+## 나머지 매개변수(Rest parameters), 전개 구문 (Spread syntax) = ...
+### 나머지 매개변수(Rest parameters)
+인수전달
+```javascript
+      //함수에 넘겨주는 인수의 개수는 제한없음
+      function showName(name){ //(name)개수 제한 없음
+        console.log(name);
+      }
+      showName('Mike') //'Mike'
+      showName('Mike', 'Tom') //'Mike' 에러 발생하지 않고 하나만 찍힘
+
+      showName(); //undefined 에러 발생하지 않음
+```
+#### 함수에 인수를 얻는 방법은 두가지가 있음
+1. arguments(화살표 함수엔 없음)
+2. 나머지 매개변수
+##### arguments
+- 함수로 넘어 온 모든 인수에 접근
+- 함수 내에서 이용 가능한 지역변수
+- length/index
+- Array 형태의 객체
+- 배열의 내장 메서드 없음(forEach, map)
+```javascript
+      function showName(name){
+          console.log(arguments.length); //2
+          console.log(arguments[0]); //'Mike'
+          console.log(arguments[1]); //'Tom'
+      }
+      showName('Mike', 'Tom');
+```
+##### 나머지 매개변수
+- 정해지지 않은 개수의 인수를 배열로 나타냄
+- 항상 마지막에 작성
+```javascript
+      function showName(...names){ (...배열이름)
+          console.log(names);
+      }
+      showName(); //[]
+      showName('Mike'); //['Mike']
+      showName('Mike', 'Tom'); //['Mike', 'Tom']
+```
+```javascript
+      //전달된 모든수를 더해야 될때
+      //...number는 배열이고 length가 있기때문에 for문 사용가능
+      //배열의 매서드도 사용가능
+      function add(...numbers) {
+          let result = 0;
+          numbers.forEach((num) => (result += num));
+          console.log(result); //6 55
+      }
+      add(1, 2, 3); //6
+      add(1, 2, 3, 4, 5, 6, 7, 8, 9, 10); //55
+
+
+      //배열의 매서드 사용 : reduce()
+      function add(...numbers) {
+      let result = numbers.reduce((prev, cur) => prev + cur);
+      console.log(result); //6 55
+      }
+      add(1, 2, 3); //6
+      add(1, 2, 3, 4, 5, 6, 7, 8, 9, 10); //55
+```
+```javascript
+      //user 객체를 만들어 주는 생성자 함수
+      function User(name, age, ...skills) {
+        this.name = name;
+        this.age = age;
+        this.skills = skills;
+      }
+      const user1 = new User('Mike', 30, 'html', 'css');
+      const user2 = new User('Tom', 20, 'JS', 'React');
+      const user3 = new User('Jane', 10, 'English');
+      console.log(user1) //{name: 'Mike', age: 30, skills: ['html', 'css']}
+      console.log(user2) //{name: 'Tom', age: 20, skills: ['JS', 'React']}
+      console.log(user3) //{name: 'Jane', age: 10, skills: ['English']}
+```
+### 전개 구문 (Spread syntax)
+#### 전개 구문 (Spread syntax) : 배열
+- 배열에 넣고 중간에 빼고 병합하는 작업: arr.push(), arr.splice(), arr.concat() 은 번거로움, 전개구문 사용하면 쉽게 가능
+```javascript
+      let arr1 = [1, 2, 3];
+      let arr2 = [4, 5, 6];
+
+      let result = [...arr1, ...arr2];
+      //중간에 쓰는것도 가능
+      let result2 = [0, ...arr1, ...arr2, 7, 8, 9];
+
+      console.log(result); //[1, 2, 3, 4, 5, 6]
+      console.log(result2); //[0, 1, 2, 3, 4, 5, 6, 7, 8 , 9]
+```
+```javascript
+    // arr1을 [4, 5, 6, 1, 2, 3]으로 만들려면?
+    let arr1 = [1, 2, 3];
+    let arr2 = [4, 5, 6];
+
+    // X
+    arr2.forEach((num) => {
+      arr1.unshift(num) //[6, 5, 4, 1, 2, 3]
+    })
+    //돌기전에 역순으로 정렬 시켜줘야함
+    arr2.reverse().forEach((num) => { //reverse() -> arr2 [6, 5, 4]
+      arr1.unshift(num) //[4, 5, 6, 1, 2, 3]
+    })
+    //전개 구문사용 하면
+    arr1  = [...arr2, ...arr1];
+
+    console.log(arr1);
+```
+#### 전개 구문 (Spread syntax) : 객체
+```javascript
+      let user = {name: 'Mike'}
+      let mike = {...user, age: 30}
+      console.log(mike) //{name: "Mike", age: 30}
+```
+Object.assign()쓸 필요 없음
+```javascript
+      let arr = [1, 2, 3];
+      let arr2 = [...arr]; //[1, 2, 3]
+
+      let user = {name: 'Mike', age: 30};
+      let user2 = {...user};
+
+      user2.name = 'Tom';
+
+      console.log(user.name); //"Mike"
+      console.log(user2.name); //"Tom" user2가 별개로 복제 되어서 name을 바꿔도 user에 영향주지 않음
+```
+```javascript
+      let user = {name: "Mike"};
+      let info = {age: 30};
+      let fe = ["JS", "React"];
+      let lang = ["Korean", "English"];
+
+      user = Object.assign({}
+             user,
+            info,
+            {
+                skills = [],
+            });
+      //skills에 fe, lang 넣기
+      //방법 1
+      fe.forEach(item => {
+        user.skills.push(item);
+      })
+      lang.forEach(item => {
+        user.skills.push(item);
+      })
+
+      //방법 2 전개구문 사용시
+      user.skills = [...fe, ...lang]
+      console.log(user);
+```
+위에꺼 전개구문으로 정리 하자면
+```javascript
+      let user = {name: "Mike"};
+      let info = {age: 30};
+      let fe = ["JS", "React"];
+      let lang = ["Korean", "English"];
+
+    user = {
+      ...user,
+      ...info,
+      skills: [...fe, ...lang],
+    };
+
+    console.log(user);
+```
+## 클로저 (Closure)
+- 함수와 렉시컬 환경의 조합, 함수가 생성될 당시의 외부 변수를 기억
+### 어휘적 환경 (Lexical Environment)
+- Lexical환경
+1. 코드가 실행되면 script 내 변수 들이 Lexical환경에 올라감(호이스팅) -> one: 초기화x(사용불가), addOne: function 초기화o(사용가능)
+2. one: undefined (사용해도 에러는 안남 값으로 undefined 반환), addOne: function
+3. one: 1, addOn: function
+4. 함수 실행 num: 5
+5. 내부 Lexical 환경(내부가 외부 전역 참조) -> num: 5, 전역 Lexical 환경 -> one:1, addOne: function
+```javascript
+      let one; //2
+      one = 1; //3
+      function addOne(num) {
+        console.log(one + num);
+      }
+      addOne(5); //4
+```
+1. 전역 Lexical 환경 -> makeAdder:function, add3: 초기화x
+2. const add3 = makeAdder(3);실행시 함수가 실행되고 makeAdder Lexical환경이 만들어짐 -> x:3 전달받은 x의 값이 들어감
+3. 전역 Lexical 환경 -> makeAdder:function, add3: function
+4. console.log(add3(2)); 실행시 return function(y) {} 익명함수 Lexical환경이 만들어짐 -> y:2
+5. 익명함수에 x 값이 없으니 상위함수인 makeAdder의 x에 접근함 (makeAdder Lexical환경으로 찾으러감) = 클로저 Closure
+```javascript
+      function makeAdder(x) {
+          return function(y) {
+              return x + y;
+          }
+      }
+      const add3 = makeAdder(3);
+      console.log(add3(2)); //5
+
+      const add10 = makeAdder(10);
+      console.log(add10(5)); //15
+      console.log(add3(1)); //4
+```
+```javascript
+      function makeCounter() {
+          let num = 0; //은닉화
+          return function() {
+            return num ++;
+          };
+      }
+
+      let counter = makeCounter();
+
+      console.log(counter()); //0
+      console.log(counter()); //1
+      console.log(counter()); //2
+```
+## setTimeout / setInterval
+- setTimeout (함수, 시간, 인수) : 일정 시간이 지난 후 함수를 실행
+- setInterval : 일정 시간 간격으로 함수를 반복
+- clearTimeout(tId); : 예정된 작업을 없앰, setTimeout은 아이디를 반환하는데, tId를 사용해 스케줄 취소
+### setTimeout
+```javascript
+      //작성법 1 : 함수 전달
+      function fn() {
+        console.log(3)
+      }
+      setTimeout(fn, 3000); //3초후에 console.log(3)찍어줌
+
+      //작성법 2 : 함수 전달 안 하고 바로 작성
+      setTimeout(function() {
+        console.log(3)
+      }, 3000);
+```
+### setTimeout 인수 / ClearTimeout
+```javascript
+      const tId = function showName(name) {
+                    console.log(name);
+                  }
+      setTimeout(showName, 3000, 'Mike'); //인수 'Mike'가 name 으로 들어감
+
+      clearTimeout(tId); //3초전에 실행되기 떄문에 log 안찍힘, 아무일도 일어나지 않음
+```
+### setInterval
+```javascript
+      function showName(name) {
+        console.log(name);
+      }
+      const tId = setInterval(showName, 3000, 'Mike'); //3초마다 'mike'가 찍힘, 'mike' 'mike' 'mike'...
+
+      clearTimeout(tId); //중단시 사용
+```
+- 주의사항: 시간을 0으로 줘도 바로 실행되지 않음, 실행중인 스크립트가 종료된후 스케줄인 함수 실행
+- 브라우저엔 시본적으로 4ms~ 대기 시간이 있음
+```javascript
+      setTimeout(function() {
+        console.log(2) //2번째로 찍힘
+      }, 0);
+      console.log(1); //1번째로 찍힘
+```
+### setTimeout 인수 / ClearTimeout
+```javascript
+      let num = 0;
+      function showTime() {
+          console.log(`안녕하세요. 접속하신지 ${num++}초가 지났습니다.`);
+          //5초 동안만 보여줌 0,1,2,3,4,5
+          if(num > 5) {
+            clearInterval(tId);
+          }
+      }
+      const tId = setInterval(showTime, 1000);//일초에 한번씩 메세지가실행 
+```
+## call, apply, bind
+- 함수 호출 방식과 관계없이 this를 지정할 수 있음
+### call()
+- 모든 함수에서 사용가능 this를 특정값으로 지정가능
+- call(this가 사용할 값, 함수가 사용할 매개변수 )
+- 매개변수를 직접 받아서 객체에 들어감
+```javascript
+      const mike = {
+        name: 'Mike',
+      };
+      const tom = {
+        name: 'Tom',
+      };
+      function showThisName() {
+        console.log(this.name); //window
+      }
+
+      showThisName(); //window.name; ""
+      showThisName().call(mike); //Mike
+      showThisName().call(tom); //Tom
+
+      function update(birthYear, occupation){
+        this.birthYear = birthYearl;
+        this.occupation = occupation;
+      };
+
+      update().call(mike, 1999, 'singer');
+      console.log(mike); // {name: 'Mike', birthYear: 1999, occupation: "singer"}
+      update().call(tom, 2002, 'teacher');
+      console.log(tom); // {name: 'Tom', birthYear: 2002, occupation: "teacher"}
+```
+### apply()
+- apply(this가 사용할 값, &#91;매개변수, 매개변수&#93;)
+- 함수 매개변수를 처리하는 방법을 제외하면 call 과 같음
+- 매개변수를 배열로 받음
+- 배열요소를 함수 매개변수로 사용할때 유용
+```javascript
+      function update(birthYear, occupation){
+        this.birthYear = birthYearl;
+        this.occupation = occupation;
+      };
+
+      update().apply(mike, [1999, 'singer']);
+      console.log(mike); // {name: 'Mike', birthYear: 1999, occupation: "singer"}
+      update().apply(tom, [2002, 'teacher']);
+      console.log(tom); // {name: 'Tom', birthYear: 2002, occupation: "teacher"}
+```
+```javascript
+    const minNum = Math.min(3, 10, 1, 6, 4);
+    const maxNum = Math.max(3, 10, 1, 6, 4);
+
+    console.log(minNum); //1
+    console.log(maxNum); //0
+
+    //Math에 배열 넣으면 NaN으로 나옴
+    const minNum = Math.min([3, 10, 1, 6, 4]);
+    console.log(minNum); //NaN
+
+```
+```javascript
+    //배열이 있다고 하면 풀어서 넣어줘야함
+    const nums = [3, 10, 1, 6, 4];
+
+    const minNum = Math.min(nums);
+    const maxNum = Math.max(nums);
+
+    console.log(minNum); //NaN
+    console.log(maxNum); //NaN
+
+    //spread 연산자 활용
+    const nums = [3, 10, 1, 6, 4];
+
+    const minNum = Math.min(...nums);
+    const maxNum = Math.max(...nums);
+
+    console.log(minNum); //1
+    console.log(maxNum); //10
+
+    //call(), apply() 사용
+    const nums = [3, 10, 1, 6, 4];
+
+    const minNum = Math.min.apply(null, nums);
+    const maxNum = Math.max.apply(null, nums);
+    const minNum = Math.min.call(null, ...nums);
+    const maxNum = Math.max.call(null, ...nums);
+
+    console.log(minNum); //1
+    console.log(maxNum); //10
+```
+### bind()
+```javascript
+      const mike = {
+        name : "Mike",
+      };
+
+      function update(birthYear, occupation){
+        this.birthYear = birthYearl;
+        this.occupation = occupation;
+      };
+
+      const updateMike = update.bind(mike);
+
+      updateMike(1980, "police");
+      console.log(mike) //{name: "Mike", birthYear: 1980, occupation: 'police'}
+```
+```javascript
+      const user = {
+        name: "Mike",
+        showName: function() {
+          console.log(`hello, ${this.name}`);
+        },
+      };
+
+      user.showName(); //hello, Mike
+
+      let fn = user.showName;
+      fn(); //hello,
+      fn.call(user); //hello, Mike
+      fn.apply(user); //hello, Mike
+
+      let boundFn = fn.bind(user);
+      boundFn(); //hello, Mike
+```
+## 상속, prototype
+
+
+
+
