@@ -573,7 +573,7 @@ Number()와 다른점은 문자가 혼용 되어 있어도 동작함
 ```
 ```javascript
       function hasCola(str) {
-          if(str.indexOf('콜라')){ 
+          if(str.indexOf('콜라') > -1){ 
               //true
               console.log('금칙어가 있습니다.');
           }else{
