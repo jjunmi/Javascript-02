@@ -615,6 +615,14 @@ Number()와 다른점은 문자가 혼용 되어 있어도 동작함
       arr.includes()
       arr.find(fn)
       arr.findIndex(fn)
+      arr.filter(fn)
+      arr.reverse()
+      arr.map(fn)
+      arr.join()
+      arr.split()
+      Array.isArray()
+      arr.sort(fn)
+      arr.reduce(fn)
 ```
 ###  arr.splice(n, m, x) : 특정 요소 지우고 추가
 - n 시작
@@ -751,10 +759,10 @@ Number()와 다른점은 문자가 혼용 되어 있어도 동작함
       let result = arr.join();
       console.log(result); //안녕, 나는, 철수야
 
-      let result = arr.join(  );
+      let result = arr.join("  ");
       console.log(result); //안녕  나는  철수야
 
-      let result = arr.join(-);
+      let result = arr.join("-");
       console.log(result); //안녕-나는-철수야
 ```
 ### split: 문자열을 배열로 만들어줌
@@ -780,6 +788,8 @@ Number()와 다른점은 문자가 혼용 되어 있어도 동작함
       consoel.log(Array.isArray(userList)); //true
 ```
 ### arr.sort() : 배열 재정렬, 배열 자체가 변경되니 주의
+#### Lodash 라이브러리 사용 : [Lodash](https://lodash.com/)
+-  _.sortBy(arr); 어떤 로직이 들어있는지 신경 안써도되고, 숫자든 문자든 객체든 원하는 기준으로 정렬 해줌
 ```javascript
       let arr = [1, 5, 4, 2, 3]
       arr.sort();
@@ -795,15 +805,84 @@ Number()와 다른점은 문자가 혼용 되어 있어도 동작함
 
       let arr = [27, 8, 5, 13]
       arr.sort((a, b) => {
+        console.log(a, b); //8 27, 5 8, 13 5 , 13 27 두개씩 비교 a - b 해서 크기 비교 순서 정함
         return a - b;
       });
       console.log(arr); //[13, 27, 5, 8] 문자열로 인식, 1,2  인식해서 앞으로 배열
+      //배열내 두개씩 순차적으로 비교, 작은수가 앞으로 간다, - 해서 양수면 더큰값 뒤로
+      // Lodash -> _.sortBy(arr);
 ```
-### 
+### arr.reduce()
+- 인수로 함수를 받음
+- (지금까지 누적 계산값, 현재값) => {return 계산값};
 ```javascript
-      
+      //배열의 모든수 합치기
+      let arr = [1, 2, 3, 4, 5];
+      //for, for of, forEach
+      let result = 0; //초기값은 0으로 주고
+      arr.forEach((num) => {
+          result += num;
+      });
+      console.log(result); //15
+
+      //reduce사용
+      const reduceResult = arr.reduce((prev, cur) => {
+          return prev + cur;
+      }, 0); //안쓰면 첫번째 요소(1)가 들어감
+      console.log(reduceResult); //15
 ```
-### 
+map()이나 filter()대신에 reduce()를 써서 반환 예시
 ```javascript
-      
+      //나이를 판단해 성인만 뽑아서 새로운 배열 만듬
+      let userList = [
+        {name: "Mike", age: 30 },
+        {name: "Tom", age: 10 },
+        {name: "Jane", age: 27 },
+        {name: "Sue", age: 26 },
+        {name: "Harry", age: 3 },
+        {name: "Steve", age: 60 },
+      ]
+      let result = userList.reduce((prev, cur) => {
+          if(cur.age > 19){
+            prev.push(cur.name);
+          }
+          return prev;
+      }, []);
+      console.log(result);
+      // ["Mike", "Jane", "Sue", "Steve"]
+```
+```javascript
+      //나이 합은? 
+      let userList = [
+        {name: "Mike", age: 30 },
+        {name: "Tom", age: 10 },
+        {name: "Jane", age: 27 },
+        {name: "Sue", age: 26 },
+        {name: "Harry", age: 43 },
+        {name: "Steve", age: 60 },
+      ]
+      let result = userList.reduce((prev, cur) => {
+          return prev += cur.age;
+      }, 0);
+      console.log(result);
+      //196
+```
+```javascript
+      //이름이 3자인 사람
+      let userList = [
+        {name: "Mike", age: 30 },
+        {name: "Tom", age: 10 },
+        {name: "Jane", age: 27 },
+        {name: "Sue", age: 26 },
+        {name: "Harry", age: 43 },
+        {name: "Steve", age: 60 },
+      ]
+      let result = userList.reduce((prev, cur) => {
+          if(cur.name.length === 3){
+            prev.push(cur.name);
+          }
+          return.prev;
+      }, []);
+      console.log(result);
+      //["Tom", "Sue"]
 ``` 
